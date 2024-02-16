@@ -1,0 +1,25 @@
+{
+  "name": "vanillamation",
+  "version": "0.0.1",
+  "description": "Animation timeline generator in vanilla js",
+  "main": "index.js",
+  "scripts": {
+	"start": "webpack-dev-server --open --mode development --config webpack.config.js",
+	"build": "rm -r ./build/* && webpack --mode production",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jefferson Real",
+  "license": "ISC",
+  "devDependencies": {
+    "css-loader": "^6.10.0",
+    "html-webpack-plugin": "^5.6.0",
+    "node-sass": "^9.0.0",
+    "sass-loader": "^14.1.0",
+    "style-loader": "^3.3.4",
+    "webpack": "^5.90.2"
+  },
+  "dependencies": {
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.0.2"
+  }
+}
