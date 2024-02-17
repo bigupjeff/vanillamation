@@ -13,9 +13,11 @@ module.exports = {
 		filename: '[name].js',
 	},
 	devServer: {
-		constentBase: path.join(__dirname, 'src' ),
+		static: {
+			directory: path.join(__dirname, 'src' ),
+		  },
 		port: 9696,
-		watchContentBase: true
+		liveReload: true
 	},
 	module: {
 		rules: [
@@ -30,8 +32,21 @@ module.exports = {
 		]
 	},
 	plugins: [
+		// To generate more than one HTML file, declare the plugin more than once:
 		new HtmlWebpackPlugin( {
-			template: 'src/index.html'
-		} )
+			filename: 'home.html',
+			template: 'src/home.html',
+			minify: false
+		} ),
+		new HtmlWebpackPlugin( {
+			filename: 'demo/demo.html',
+			template: 'src/demo/demo.html',
+			minify: false
+		} ),
+		new HtmlWebpackPlugin( {
+			filename: 'demo/modal/modal.html',
+			template: 'src/demo/modal/modal.html',
+			minify: false
+		} ),
 	]
 }
