@@ -1,1 +1,74 @@
- 
+ .modal {
+	--jsScrollbarWidth: 0;
+
+	display: none; /* flex */
+	opacity: 1;
+	z-index: 10;
+	overflow: auto;
+}
+	.modal_dialog {
+		display: grid;
+		grid: [controls] max-content 1fr [contents] auto 1fr / 100%;
+		justify-items: center;
+		z-index: 10;
+		margin: auto;
+		border: solid 0.25rem;
+		border-radius: 1rem;
+		background: #fff;
+		min-width: clamp(10rem, 100%, 32rem);
+		max-height: fit-content;
+		overflow: auto;
+	}
+		.modal_controls {
+			display: flex;
+			flex-flow: row;
+			grid-row: controls / span 1;
+			justify-content: flex-end;
+			padding: 0.5rem;
+			width: 100%;
+			height: fit-content;
+		}
+		.modal_contents {
+			grid-row: contents / span 1;
+			padding: 1em;
+		}
+			.modal_control-close {
+				border: none;
+				border-radius: 0.25rem;
+				background: red;
+				padding: 0.25em 0.5em;
+				color: #fff;
+				font-family: inherit;
+				font-size: inherit;
+				font-weight: 600;
+
+				&:hover {
+					cursor: pointer;
+					background: #000;
+					color: #fff;
+				}
+			}
+
+@media ( max-width: 768px ) {
+	.modal_dialog {
+		position: fixed;
+		top: 0;
+		left: 0;
+		align-items: center;
+		border: none;
+		border-radius: 0;
+		width: calc( 100vw - var(--jsScrollbarWidth ) );
+		height: 100vh;
+		overflow: auto;
+	}
+}
+
+@media ( min-width: 768px ) {
+	.modal {
+		position: fixed;
+		top: 0;
+		background: #000a;
+		width: calc( 100vw - var(--jsScrollbarWidth ) );
+		height: 100vh;
+	}
+}

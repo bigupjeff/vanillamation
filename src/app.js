@@ -1,2 +1,2 @@
-require( './engine/_main.js' )
-require( './demo/_main.js' )
+require( './vanillamation/_main.js' )
+require( './styles.scss' )

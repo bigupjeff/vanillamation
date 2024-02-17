@@ -1,16 +1,55 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 <title>Vanillamation Modal Demo</title>
 </head>
 <body>
 
-<h1>Vanillamation Modal Demo</h1>
-<p>Here is an example of a modal powered by Vanillamation.</p>
+	<header>
+		<%= require('html-loader!../../parts/nav-menu.html').default %>
+	</header>
 
+	<h1>Vanillamation Modal Demo</h1>
+	<p>Here is an example of a modal powered by Vanillamation.</p>
 
-<h2>Home</h2>
-<a href="/"></a>
+	<div class="buttons">
+		<button
+			aria-label="Open Modal"
+			title="Open Modal"
+			type="button"
+			class="button aligncenter modal_control-open"
+			data-modal-target-id="demoModal"
+		>
+			<span>
+				Open Modal
+			</span>
+		</button>
+	</div>
 
 </body>
+
+<aside
+	class="modal"
+	id="demoModal"
+>
+	<div 
+		role="dialog"
+		class="modal_dialog"
+	>
+		<div class="modal_controls">
+			<button 
+				aria-label="Close Modal"
+				title="Close Modal"
+				type="button"
+				class="modal_control-close"
+			>
+				Close
+			</button>
+		</div>
+		<div class="modal_contents">
+			<h2>Hi! 👋 I'm a popup modal!</h2>
+		</div>
+	</div>
+</aside>
+
 </html>

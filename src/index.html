@@ -4,13 +4,14 @@
 <title>Vanillamation</title>
 </head>
 <body>
+	<header>
+		<%= require('html-loader!./parts/nav-menu.html').default %>
+	</header>
 
-<h1>Vanillamation</h1>
-<p>Welcome to my vanilla js animation utility.</p>
+	<h1>Vanillamation</h1>
+	<p>Welcome to my vanilla js animation utility. Check out the demos to see it in action:</p>
 
-
-<h2>Demos</h2>
-<a href="./demo/index.html"></a>
+	<%= require('html-loader!./parts/nav-demos.html').default %>
 
 </body>
 </html>

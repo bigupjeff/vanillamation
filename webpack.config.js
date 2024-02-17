@@ -4,9 +4,8 @@ const HtmlWebpackPlugin = require( 'html-webpack-plugin' )
 
 module.exports = {
 	entry: {
-		'index': './src/app.js',
-		'demo/demo': '/src/demo/_main.js',
-		'engine/engine': '/src/engine/_main.js',
+		'vanillamation': './src/app.js',
+		'demo/modal': '/src/demo/modal/_main.js',
 	},
 	output: {
 		path: __dirname + '/build',
@@ -34,13 +33,8 @@ module.exports = {
 	plugins: [
 		// To generate more than one HTML file, declare the plugin more than once:
 		new HtmlWebpackPlugin( {
-			filename: 'home.html',
-			template: 'src/home.html',
-			minify: false
-		} ),
-		new HtmlWebpackPlugin( {
-			filename: 'demo/demo.html',
-			template: 'src/demo/demo.html',
+			filename: 'index.html',
+			template: 'src/index.html',
 			minify: false
 		} ),
 		new HtmlWebpackPlugin( {

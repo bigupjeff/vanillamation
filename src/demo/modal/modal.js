@@ -1,5 +1,7 @@
+import { animate } from '../../vanillamation/_animate'
+
 /**
- * Lonewolf Modal Javascript
+ * Modal Javascript
  *
  * Handle modal animation and mechanics.
  *
@@ -8,25 +10,26 @@
  * @copyright Copyright 2023 Jefferson Real
  */
 
-import { animate } from '../../engine/_animate'
 
 const modal = () => {
+
 	function init() {
-		document
-			.querySelectorAll( '.modal_control-open' )
-			.forEach( ( buttonOpen ) => {
-				buttonOpen.addEventListener( 'click', modalLaunch )
-			} )
+		const openButtons = document.querySelectorAll( '.modal_control-open' )
+		openButtons.forEach( ( button ) => {
+			button.addEventListener( 'click', modalLaunch )
+		} )
 	}
+
+	const scrollbarWidthCssVar = '--jsScrollbarWidth'
 
 	let animating = false // true when animation is in progress.
 	let active = false // true when modal is displayed.
 	let mobile = true // true when screen width is less than 768px (48em).
 
-	// Plugin-wide vars.
 	let overlay
 	let dialog
 	let buttonClose
+	let scrollbarWidth
 
 	/**
 	 * Open the model popup.
@@ -34,18 +37,18 @@ const modal = () => {
 	 * @param event
 	 */
 	async function modalLaunch( event ) {
-		// Get the modal elements
-		const modalClass = event.currentTarget.id
-		overlay = document.querySelector( '.' + modalClass )
+		// Get the modal elements.
+		const id = event.currentTarget.getAttribute( 'data-modal-target-id' )
+		overlay  = document.querySelector( '#' + id )
 
-		dialog = overlay.querySelector( '.modal_dialog' )
+		dialog      = overlay.querySelector( '.modal_dialog' )
 		buttonClose = overlay.querySelector( '.modal_control-close' )
 
 		buttonClose.onclick = () => {
 			closeModal()
 		}
 
-		// If a click event is not on dialog
+		// If a click event is not on dialog.
 		window.onclick = function ( event ) {
 			if (
 				dialog !== ! event.target &&
@@ -55,15 +58,12 @@ const modal = () => {
 			}
 		}
 
-		await Promise.all( [ setDeviceSize(), getScrollbarWidth() ] )
+		await Promise.all( [ setDeviceSize(), setScrollbarWidth() ] )
 		openModal()
 	}
 
 	async function setDeviceSize() {
-		const pageWidth = parseInt(
-			document.querySelector( 'html' ).getBoundingClientRect().width,
-			10
-		)
+		const pageWidth = parseInt( document.querySelector( 'html' ).getBoundingClientRect().width, 10 )
 
 		if ( pageWidth <= 768 ) {
 			mobile = true
@@ -122,7 +122,7 @@ const modal = () => {
 		window.addEventListener( 'resize', resizeListener )
 	}
 
-	// Open the modal
+	// Open the modal.
 	async function openModal() {
 		if ( ! active && ! animating ) {
 			active = true
@@ -151,7 +151,7 @@ const modal = () => {
 		}
 	}
 
-	// Close the modal
+	// Close the modal.
 	async function closeModal() {
 		if ( active && ! animating ) {
 			active = false
@@ -180,47 +180,51 @@ const modal = () => {
 		}
 	}
 
-	// Moody overlay - fadeout
+	// Moody overlay - fadeout.
 	function fadeOut( overlay ) {
-		let p = 100 // 0.5 x 100 to escape floating point problem
+		let p = 100 // 0.5 x 100 to escape floating point problem.
 		const animateFilterOut = setInterval( function () {
 			if ( p <= 0 ) {
 				clearInterval( animateFilterOut )
 			}
 			overlay.style.opacity = p / 100
-			p -= 2 // 1 represents 0.01 in css output
-		}, 16 ) // 10ms x 25 for 0.25sec animation
+			p -= 2 // 1 represents 0.01 in css output.
+		}, 16 ) // 10ms x 25 for 0.25sec animation.
 	}
 
-	// Moody overlay - fadein
+	// Moody overlay - fadein.
 	function fadeIn( overlay ) {
-		let p = 4 // 0.01 x 100 to escape floating point problem
+		let p = 4 // 0.01 x 100 to escape floating point problem.
 		const animateFilterIn = setInterval( function () {
 			if ( p >= 100 ) {
-				// 100 (/100) represents 0.5 in css output
+				// 100 (/100) represents 0.5 in css output.
 				clearInterval( animateFilterIn )
 			}
 			overlay.style.opacity = p / 100
-			p += 2 // 1 represents 0.01 in css output
-		}, 16 ) // 10ms x 25 for 0.25sec animation
+			p += 2 // 1 represents 0.01 in css output.
+		}, 16 ) // 10ms x 25 for 0.25sec animation.
 	}
 
-	let scrollbarWidth
-	async function getScrollbarWidth() {
-		// Get window width inc scrollbar
+	async function setScrollbarWidth() {
+		// Get window width inc scrollbar.
 		const widthWithScrollBar = window.innerWidth
-		// Get window width exc scrollbar
+		// Get window width exc scrollbar.
 		const widthWithoutScrollBar = document
 			.querySelector( 'html' )
 			.getBoundingClientRect().width
-		// Calc the scrollbar width
-		scrollbarWidth =
-			parseInt( widthWithScrollBar - widthWithoutScrollBar, 10 ) + 'px'
+		// Calc the scrollbar width.
+		scrollbarWidth = parseInt( widthWithScrollBar - widthWithoutScrollBar, 10 ) + 'px'
+		// Update CSS var for styles.
+		overlay.style.setProperty( scrollbarWidthCssVar, scrollbarWidth )
+
+
+console.log( 'overlay.style', overlay.style )
+
 		return scrollbarWidth
 	}
 
 	function disableScroll() {
-		// Cover the missing scrollbar gap with a black div
+		// Cover the missing scrollbar gap with a black div.
 		const elemExists = document.getElementById( 'js_psuedoScrollBar' )
 
 		if ( elemExists !== null ) {
@@ -252,7 +256,7 @@ const modal = () => {
 		}
 	}
 
-	// Poll for doc ready state
+	// Poll for doc ready state.
 	const docLoaded = setInterval( function () {
 		if ( document.readyState === 'complete' ) {
 			clearInterval( docLoaded )
