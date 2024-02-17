@@ -131,7 +131,6 @@ const modal = () => {
 			setResizeListener()
 
 			if ( mobile ) {
-				dialog.style.left = '-768px'
 				dialog.style.transform = 'scale(1)'
 				dialog.style.opacity = '1'
 				overlay.style.display = 'contents'
@@ -140,12 +139,12 @@ const modal = () => {
 				animating = false
 			} else {
 				dialog.style.left = '0'
-				dialog.style.transform = 'scale(0)'
-				dialog.style.opacity = '0'
 				overlay.style.display = 'flex'
-				overlay.style.opacity = '0'
-				fadeIn( overlay )
-				await animate( dialog, 'scale', 'easeInOutCirc', 0, 1, 800 )
+				await Promise.all( [
+					animate( overlay, 'opacity', 'easeInOutCirc', 0, 1, 800 ),
+					animate( dialog, 'opacity', 'easeInOutCirc', 0, 1, 800 ),
+					animate( dialog, 'scale', 'easeInOutCirc', 0, 1, 800 )
+				] )
 				animating = false
 			}
 		}
@@ -159,7 +158,6 @@ const modal = () => {
 			enableScroll()
 
 			if ( mobile ) {
-				dialog.style.left = '0'
 				dialog.style.transform = 'scale(1)'
 				dialog.style.opacity = '1'
 				overlay.style.display = 'contents'
@@ -168,41 +166,16 @@ const modal = () => {
 				animating = false
 			} else {
 				dialog.style.left = '0'
-				dialog.style.transform = 'scale(1)'
-				dialog.style.opacity = '1'
 				overlay.style.display = 'flex'
-				overlay.style.opacity = '1'
-				fadeOut( overlay )
-				await animate( dialog, 'scale', 'easeInOutCirc', 1, 0, 800 )
+				await Promise.all( [
+					animate( overlay, 'opacity', 'easeInOutCirc', 1, 0, 800 ),
+					animate( dialog, 'opacity', 'easeInOutCirc', 1, 0, 800 ),
+					animate( dialog, 'scale', 'easeInOutCirc', 1, 0, 800 )
+				] )
 				overlay.style.display = 'none'
 				animating = false
 			}
 		}
-	}
-
-	// Moody overlay - fadeout.
-	function fadeOut( overlay ) {
-		let p = 100 // 0.5 x 100 to escape floating point problem.
-		const animateFilterOut = setInterval( function () {
-			if ( p <= 0 ) {
-				clearInterval( animateFilterOut )
-			}
-			overlay.style.opacity = p / 100
-			p -= 2 // 1 represents 0.01 in css output.
-		}, 16 ) // 10ms x 25 for 0.25sec animation.
-	}
-
-	// Moody overlay - fadein.
-	function fadeIn( overlay ) {
-		let p = 4 // 0.01 x 100 to escape floating point problem.
-		const animateFilterIn = setInterval( function () {
-			if ( p >= 100 ) {
-				// 100 (/100) represents 0.5 in css output.
-				clearInterval( animateFilterIn )
-			}
-			overlay.style.opacity = p / 100
-			p += 2 // 1 represents 0.01 in css output.
-		}, 16 ) // 10ms x 25 for 0.25sec animation.
 	}
 
 	async function setScrollbarWidth() {
@@ -216,10 +189,6 @@ const modal = () => {
 		scrollbarWidth = parseInt( widthWithScrollBar - widthWithoutScrollBar, 10 ) + 'px'
 		// Update CSS var for styles.
 		overlay.style.setProperty( scrollbarWidthCssVar, scrollbarWidth )
-
-
-console.log( 'overlay.style', overlay.style )
-
 		return scrollbarWidth
 	}
 

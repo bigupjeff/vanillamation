@@ -38,6 +38,9 @@ function doAnimation(
 	let time = 0
 	const isIncreasing = endValue >= startValue // boolen to test for positive increment
 
+	// Set the 'from' value.
+	set( element, property, startValue )
+
 	return new Promise( ( resolve ) => {
 		const timer = setInterval( function () {
 			time += timeIncrement
@@ -228,17 +231,24 @@ function nextValue( ease, startValue, time, range, duration ) {
 }
 
 /*
- * Update the CSS property passed by animate()
+ * Set a CSS property.
  */
 function set( element, property, value ) {
 	switch ( property ) {
 		case 'scale':
 			element.style.transform = 'scale(' + value + ')'
+			break
+
+		case 'opacity':
 			element.style.opacity = value
-			return
+			break
 
 		case 'left':
-			element.style.left = value + 'px'
+		case 'right':
+		case 'top':
+		case 'bottom':
+			element.style[ property ] = value + 'px'
+			break
 	}
 }
 
