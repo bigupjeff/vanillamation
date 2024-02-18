@@ -13,8 +13,6 @@ import { animate } from '../../vanillamation/_animate'
 
 const modal = () => {
 
-	const scrollbarWidthCssVar = '--jsScrollbarWidth'
-
 	let animating = false // True when animation is in progress.
 	let active = false // True when modal is displayed.
 	let mobile // True when screen width is less than 768px.
@@ -187,7 +185,6 @@ const modal = () => {
 		const widthWithScrollbar = window.innerWidth
 		const widthWithoutScrollbar = document.querySelector( 'html' ).getBoundingClientRect().width
 		scrollbarWidth = parseInt( widthWithScrollbar - widthWithoutScrollbar, 10 ) + 'px'
-		overlay.style.setProperty( scrollbarWidthCssVar, scrollbarWidth )
 		return scrollbarWidth
 	}
 
@@ -198,17 +195,16 @@ const modal = () => {
 	const disableScroll = () => {
 		const scrollMask = document.getElementById( 'js_scrollMask' )
 
-
-
-		// Possibly use colour to match scroll mask.
+		// Get body background colour to fill the scrollMask with.
 		const bodyStyles = window.getComputedStyle( document.querySelector( 'body' ) )
 		const bodyColour = bodyStyles.getPropertyValue( 'background-color' )
-		const opacity = bodyStyles.getPropertyValue( 'opacity' )
 
-		// DEBUG.
-		console.log( 'bodyColour', bodyColour )
-		console.log( 'opacity', opacity )
+		// Check is it's unset/transparent and set to white if so.
+		const rgba   = bodyColour.replace( / /g, '' )
+		// Browser computed colour should always return rgba format.
+		const colour = ( rgba === 'rgba(0,0,0,0)' ) ? '#fff' : rgba
 
+		// Show or create and insert the scrollbar mask.
 		if ( scrollMask ) {
 			scrollMask.style.display = 'block'
 		} else {
@@ -219,7 +215,7 @@ const modal = () => {
 			scrollMask.style.top = '0'
 			scrollMask.style.bottom = '0'
 			scrollMask.style.width = scrollbarWidth
-			scrollMask.style.background = '#333'
+			scrollMask.style.background = colour
 			scrollMask.style.zIndex = '9'
 			document.body.appendChild( scrollMask )
 		}

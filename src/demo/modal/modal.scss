@@ -1,6 +1,4 @@
  .modal {
-	--jsScrollbarWidth: 0;
-
 	display: none; /* flex */
 	opacity: 1;
 	z-index: 10;
@@ -18,6 +16,12 @@
 		min-width: clamp(10rem, 100%, 32rem);
 		max-height: fit-content;
 		overflow: auto;
+
+
+
+
+
+		
 	}
 		.modal_controls {
 			display: flex;
@@ -53,11 +57,12 @@
 	.modal_dialog {
 		position: fixed;
 		top: 0;
+		bottom: 0;
 		left: 0;
 		align-items: center;
 		border: none;
 		border-radius: 0;
-		width: calc( 100vw - var(--jsScrollbarWidth ) );
+		width: 100vw;
 		height: 100vh;
 		overflow: auto;
 	}
@@ -67,8 +72,11 @@
 	.modal {
 		position: fixed;
 		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
 		background: #000a;
-		width: calc( 100vw - var(--jsScrollbarWidth ) );
+		width: 100vw;
 		height: 100vh;
 	}
 }

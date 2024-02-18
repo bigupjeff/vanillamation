@@ -21,6 +21,7 @@ See the modal demo as an example of animating multiple elements/properties in pa
 - Enable multiple properties per call.
 - Enable chaining with promise callbacks.
 - Support differnt timeline types such as 'to', 'from-to' and 'set'.
+- Support units other than px.
 - Enable parrallel chains with a synchronous 'ticker'.
 - Modularise the code.
 - More demos!
