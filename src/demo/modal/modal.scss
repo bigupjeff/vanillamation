@@ -1,10 +1,26 @@
- .modal {
+body {
+	// force display a scrollbar to demo the scroll hiding.
+	height: 200vh;
+}
+ 
+.modal {
 	display: none; /* flex */
 	opacity: 1;
 	z-index: 10;
 	overflow: auto;
-}
-	.modal_dialog {
+
+	@media ( min-width: 768px ) {
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		background: #000a;
+		width: 100vw;
+		height: 100vh;
+	}
+
+	&_dialog {
 		display: grid;
 		grid: [controls] max-content 1fr [contents] auto 1fr / 100%;
 		justify-items: center;
@@ -17,66 +33,49 @@
 		max-height: fit-content;
 		overflow: auto;
 
-
-
-
-
-		
+		@media ( max-width: 768px ) {
+			position: fixed;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			align-items: center;
+			border: none;
+			border-radius: 0;
+			width: 100vw;
+			height: 100vh;
+			overflow: auto;
+		}
 	}
-		.modal_controls {
-			display: flex;
-			flex-flow: row;
-			grid-row: controls / span 1;
-			justify-content: flex-end;
-			padding: 0.5rem;
-			width: 100%;
-			height: fit-content;
-		}
-		.modal_contents {
-			grid-row: contents / span 1;
-			padding: 1em;
-		}
-			.modal_control-close {
-				border: none;
-				border-radius: 0.25rem;
-				background: red;
-				padding: 0.25em 0.5em;
-				color: #fff;
-				font-family: inherit;
-				font-size: inherit;
-				font-weight: 600;
 
-				&:hover {
-					cursor: pointer;
-					background: #000;
-					color: #fff;
-				}
-			}
+	&_controls {
+		display: flex;
+		flex-flow: row;
+		grid-row: controls / span 1;
+		justify-content: flex-end;
+		padding: 0.5rem;
+		width: 100%;
+		height: fit-content;
+	}
 
-@media ( max-width: 768px ) {
-	.modal_dialog {
-		position: fixed;
-		top: 0;
-		bottom: 0;
-		left: 0;
-		align-items: center;
+	&_contents {
+		grid-row: contents / span 1;
+		padding: 1em;
+	}
+
+	&_control-close {
 		border: none;
-		border-radius: 0;
-		width: 100vw;
-		height: 100vh;
-		overflow: auto;
-	}
-}
+		border-radius: 0.25rem;
+		background: red;
+		padding: 0.25em 0.5em;
+		color: #fff;
+		font-family: inherit;
+		font-size: inherit;
+		font-weight: 600;
 
-@media ( min-width: 768px ) {
-	.modal {
-		position: fixed;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		left: 0;
-		background: #000a;
-		width: 100vw;
-		height: 100vh;
+		&:hover {
+			cursor: pointer;
+			background: #000;
+			color: #fff;
+		}
 	}
 }

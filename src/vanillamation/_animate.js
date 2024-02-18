@@ -173,6 +173,7 @@ function nextValue( ease, startValue, time, range, duration ) {
 			return ( r / 2 ) * ( -Math.pow( 2, -10 * --t ) + 2 ) + s
 
 		case 'easeInCirc':
+			// Broken - doesn't complete.
 			return -r * ( Math.sqrt( 1 - ( t /= d ) * t ) - 1 ) + s
 
 		case 'easeOutCirc':
@@ -260,7 +261,7 @@ const animate = async (
 	endValue,
 	duration
 ) => {
-	await doAnimation(
+	const result = await doAnimation(
 		element,
 		property,
 		ease,
@@ -268,6 +269,7 @@ const animate = async (
 		endValue,
 		duration
 	)
+	return result
 }
 
 export { animate }

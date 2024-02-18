@@ -13,8 +13,6 @@ body {
 	flex-flow: column;
 	align-items: center;
 	font-family: helvetica, arial, sans-serif;
-
-	height: 200vh;
 }
 
 
@@ -102,13 +100,13 @@ h6 {
 		flex-flow: column;
 		padding-left: 0;
 		list-style: none;
+		gap: 1rem;
 
 		li {
 			display: block;
 			transition: all .2s ease-in-out;
-			border: solid 1px #555;
 			border-radius: 0.5em;
-			box-shadow: 0 0.1rem 0.25rem 0 #555;
+			box-shadow: 0 0.2rem 0.5rem 0.1rem #999;
 			font-weight: 800;
 
 			&:hover {

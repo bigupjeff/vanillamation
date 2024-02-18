@@ -6,6 +6,7 @@ module.exports = {
 	entry: {
 		'vanillamation': './src/app.js',
 		'demo/modal': '/src/demo/modal/_main.js',
+		'demo/bouncing-ball': '/src/demo/bouncing-ball/_main.js',
 	},
 	output: {
 		path: __dirname + '/build',
@@ -40,6 +41,11 @@ module.exports = {
 		new HtmlWebpackPlugin( {
 			filename: 'demo/modal/modal.html',
 			template: 'src/demo/modal/modal.html',
+			minify: false
+		} ),
+		new HtmlWebpackPlugin( {
+			filename: 'demo/bouncing-ball/bouncing-ball.html',
+			template: 'src/demo/bouncing-ball/bouncing-ball.html',
 			minify: false
 		} ),
 	]

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Vanillamation Bouncing Ball Demo</title>
+</head>
+<body>
+
+	<header>
+		<%= require('html-loader!../../parts/nav-menu.html').default %>
+	</header>
+
+	<h1>Vanillamation Bouncing Ball Demo</h1>
+	<p>This animated bouncing ball demonstrates animation chaining.</p>
+
+	<svg
+		id="ball"
+		viewBox="0 0 100 100"
+		preserveAspectRatio="xMidYMid meet"
+		xmlns="http://www.w3.org/2000/svg"
+	>
+		<circle fill="red" cx="50" cy="50" r="50" />
+	</svg>
+
+</body>
+
+</html>
