@@ -3,9 +3,9 @@
  *
  * Animate CSS properties using preset eases.
  *
- * @package lonewolf
+ * @package vanillamation
  * @author Jefferson Real <me@jeffersonreal.uk>
- * @copyright Copyright 2023 Jefferson Real
+ * @copyright Copyright 2024 Jefferson Real
  */
 
 /**

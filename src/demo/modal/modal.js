@@ -5,38 +5,40 @@ import { animate } from '../../vanillamation/_animate'
  *
  * Handle modal animation and mechanics.
  *
- * @package lonewolf
+ * @package vanillamation
  * @author Jefferson Real <me@jeffersonreal.uk>
- * @copyright Copyright 2023 Jefferson Real
+ * @copyright Copyright 2024 Jefferson Real
  */
 
 
 const modal = () => {
 
-	function init() {
+	const scrollbarWidthCssVar = '--jsScrollbarWidth'
+
+	let animating = false // True when animation is in progress.
+	let active = false // True when modal is displayed.
+	let mobile // True when screen width is less than 768px.
+	let scrollbarWidth
+
+	let overlay
+	let dialog
+	let buttonClose
+
+
+	const init = () => {
 		const openButtons = document.querySelectorAll( '.modal_control-open' )
 		openButtons.forEach( ( button ) => {
 			button.addEventListener( 'click', modalLaunch )
 		} )
 	}
 
-	const scrollbarWidthCssVar = '--jsScrollbarWidth'
-
-	let animating = false // true when animation is in progress.
-	let active = false // true when modal is displayed.
-	let mobile = true // true when screen width is less than 768px (48em).
-
-	let overlay
-	let dialog
-	let buttonClose
-	let scrollbarWidth
 
 	/**
 	 * Open the model popup.
 	 *
 	 * @param event
 	 */
-	async function modalLaunch( event ) {
+	const modalLaunch = async ( event ) => {
 		// Get the modal elements.
 		const id = event.currentTarget.getAttribute( 'data-modal-target-id' )
 		overlay  = document.querySelector( '#' + id )
@@ -58,45 +60,43 @@ const modal = () => {
 			}
 		}
 
-		await Promise.all( [ setDeviceSize(), setScrollbarWidth() ] )
+		mobile = await setDeviceSize()
+		scrollbarWidth = await setScrollbarWidth()
 		openModal()
 	}
 
-	async function setDeviceSize() {
+	const setDeviceSize = async () => {
 		const pageWidth = parseInt( document.querySelector( 'html' ).getBoundingClientRect().width, 10 )
+		const isMobile = ( pageWidth <= 768 ) ? true : false
 
-		if ( pageWidth <= 768 ) {
-			mobile = true
-		} else {
-			mobile = false
-		}
-
-		if ( mobile && active && ! animating ) {
+		if ( isMobile && active && ! animating ) {
 			dialog.style.left = '0'
 			dialog.style.transform = 'scale(1)'
 			dialog.style.opacity = '1'
 			overlay.style.display = 'contents'
 			overlay.style.opacity = '1'
-		} else if ( mobile && ! active && ! animating ) {
+		} else if ( isMobile && ! active && ! animating ) {
 			dialog.style.left = '-768px'
 			dialog.style.transform = 'scale(1)'
 			dialog.style.opacity = '1'
 			overlay.style.display = 'contents'
 			overlay.style.opacity = '1'
-		} else if ( ! mobile && active && ! animating ) {
+		} else if ( ! isMobile && active && ! animating ) {
 			dialog.style.left = '0'
 			dialog.style.transform = 'scale(1)'
 			dialog.style.opacity = '1'
 			overlay.style.display = 'flex'
 			overlay.style.opacity = '1'
-		} else if ( ! mobile && ! active && ! animating ) {
+		} else if ( ! isMobile && ! active && ! animating ) {
 			dialog.style.left = '0'
 			dialog.style.transform = 'scale(0)'
 			dialog.style.opacity = '0'
 			overlay.style.display = 'none'
 			overlay.style.opacity = '0'
 		}
+		return isMobile
 	}
+
 
 	/**
 	 * Restyle the modal on window resize.
@@ -107,23 +107,26 @@ const modal = () => {
 	 * closed as 'mobile'.
 	 *
 	 */
-	function setResizeListener() {
+	const setResizeListener = () => {
 		let resizeTimer
 		const resizeListener = ( event ) => {
 			if ( resizeTimer !== null ) window.clearTimeout( resizeTimer )
-			resizeTimer = window.setTimeout( function () {
+			resizeTimer = window.setTimeout( () => {
 				if ( ! active ) {
 					window.removeEventListener( 'resize', resizeListener )
 					return
 				}
-				setDeviceSize()
+				mobile = setDeviceSize()
 			}, 20 )
 		}
 		window.addEventListener( 'resize', resizeListener )
 	}
 
-	// Open the modal.
-	async function openModal() {
+
+	/**
+	 * Open the modal.
+	 */
+	const openModal = async () => {
 		if ( ! active && ! animating ) {
 			active = true
 			animating = true
@@ -150,12 +153,14 @@ const modal = () => {
 		}
 	}
 
+
 	// Close the modal.
-	async function closeModal() {
+	const closeModal = async () => {
 		if ( active && ! animating ) {
 			active = false
 			animating = true
 			enableScroll()
+			mobile = await setDeviceSize()
 
 			if ( mobile ) {
 				dialog.style.transform = 'scale(1)'
@@ -178,55 +183,66 @@ const modal = () => {
 		}
 	}
 
-	async function setScrollbarWidth() {
-		// Get window width inc scrollbar.
-		const widthWithScrollBar = window.innerWidth
-		// Get window width exc scrollbar.
-		const widthWithoutScrollBar = document
-			.querySelector( 'html' )
-			.getBoundingClientRect().width
-		// Calc the scrollbar width.
-		scrollbarWidth = parseInt( widthWithScrollBar - widthWithoutScrollBar, 10 ) + 'px'
-		// Update CSS var for styles.
+	const setScrollbarWidth = async () => {
+		const widthWithScrollbar = window.innerWidth
+		const widthWithoutScrollbar = document.querySelector( 'html' ).getBoundingClientRect().width
+		scrollbarWidth = parseInt( widthWithScrollbar - widthWithoutScrollbar, 10 ) + 'px'
 		overlay.style.setProperty( scrollbarWidthCssVar, scrollbarWidth )
 		return scrollbarWidth
 	}
 
-	function disableScroll() {
-		// Cover the missing scrollbar gap with a black div.
-		const elemExists = document.getElementById( 'js_psuedoScrollBar' )
 
-		if ( elemExists !== null ) {
-			document.getElementById( 'js_psuedoScrollBar' ).style.display =
-				'block'
+	/**
+	 * Lock scrolling and hide scrollbar.
+	 */
+	const disableScroll = () => {
+		const scrollMask = document.getElementById( 'js_scrollMask' )
+
+
+
+		// Possibly use colour to match scroll mask.
+		const bodyStyles = window.getComputedStyle( document.querySelector( 'body' ) )
+		const bodyColour = bodyStyles.getPropertyValue( 'background-color' )
+		const opacity = bodyStyles.getPropertyValue( 'opacity' )
+
+		// DEBUG.
+		console.log( 'bodyColour', bodyColour )
+		console.log( 'opacity', opacity )
+
+		if ( scrollMask ) {
+			scrollMask.style.display = 'block'
 		} else {
-			const psuedoScrollBar = document.createElement( 'div' )
-			psuedoScrollBar.setAttribute( 'id', 'js_psuedoScrollBar' )
-			psuedoScrollBar.style.position = 'fixed'
-			psuedoScrollBar.style.right = '0'
-			psuedoScrollBar.style.top = '0'
-			psuedoScrollBar.style.width = scrollbarWidth
-			psuedoScrollBar.style.height = '100vh'
-			psuedoScrollBar.style.background = '#333'
-			psuedoScrollBar.style.zIndex = '9'
-			document.body.appendChild( psuedoScrollBar )
+			const scrollMask = document.createElement( 'div' )
+			scrollMask.setAttribute( 'id', 'js_scrollMask' )
+			scrollMask.style.position = 'fixed'
+			scrollMask.style.right = '0'
+			scrollMask.style.top = '0'
+			scrollMask.style.bottom = '0'
+			scrollMask.style.width = scrollbarWidth
+			scrollMask.style.background = '#333'
+			scrollMask.style.zIndex = '9'
+			document.body.appendChild( scrollMask )
 		}
 		document.querySelector( 'body' ).style.overflow = 'hidden'
 		document.querySelector( 'html' ).style.paddingRight = scrollbarWidth
 	}
 
-	function enableScroll() {
-		const elemExists = document.getElementById( 'js_psuedoScrollBar' )
+
+	/**
+	 * Unlock scrolling and show scrollbar.
+	 */
+	const enableScroll = () => {
+		const elemExists = document.getElementById( 'js_scrollMask' )
 		if ( elemExists !== null ) {
-			document.getElementById( 'js_psuedoScrollBar' ).style.display =
-				'none'
+			document.getElementById( 'js_scrollMask' ).style.display = 'none'
 			document.querySelector( 'body' ).style.overflow = 'visible'
 			document.querySelector( 'html' ).style.paddingRight = '0'
 		}
 	}
 
+
 	// Poll for doc ready state.
-	const docLoaded = setInterval( function () {
+	const docLoaded = setInterval( () => {
 		if ( document.readyState === 'complete' ) {
 			clearInterval( docLoaded )
 			init()
